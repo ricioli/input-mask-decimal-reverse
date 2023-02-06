@@ -1,9 +1,9 @@
 /**
  * http://programacao09:3333/docs/frontend/components/InputMaskReverse
  */
-import React, { useRef, useState, useCallback, useEffect, FocusEventHandler, DragEventHandler } from 'react';
+import React, { DragEventHandler, FocusEventHandler, useCallback, useEffect, useRef, useState } from 'react';
 
-const InputMaskDecimalReverse = ({
+export const InputMaskDecimalReverse = ({
   prefix,
   suffix,
   unmask,
@@ -201,5 +201,3 @@ const InputMaskDecimalReverse = ({
     />
   );
 };
-
-export default InputMaskDecimalReverse;
