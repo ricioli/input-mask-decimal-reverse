@@ -1,6 +1,6 @@
 {
   "name": "input-mask-decimal-reverse",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "input-mask-decimal-reverse package",
   "main": "./lib/index.js",
   "module": "./lib/index.js",
