@@ -11,13 +11,13 @@ interface FakeEvent {
 }
 
 export const InputMaskDecimalReverse = ({
-  prefix,
-  suffix,
-  unmask,
-  scale,
-  thousandsSeparator,
-  radix,
-  unmaskedRadix,
+  prefix = '',
+  suffix = '',
+  unmask = false,
+  scale = 2,
+  thousandsSeparator = '.',
+  radix = ',',
+  unmaskedRadix = '.',
   startEmpty,
 
   value,
@@ -28,13 +28,13 @@ export const InputMaskDecimalReverse = ({
 
   ...props
 }: {
-  prefix: string;
-  suffix: string;
-  unmask: boolean;
-  scale: number;
-  thousandsSeparator: string;
-  radix: string;
-  unmaskedRadix: string;
+  prefix?: string;
+  suffix?: string;
+  unmask?: boolean;
+  scale?: number;
+  thousandsSeparator?: string;
+  radix?: string;
+  unmaskedRadix?: string;
   startEmpty?: boolean;
 
   value?: string;
