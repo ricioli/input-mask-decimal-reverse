@@ -1,1 +1,2 @@
-export * from './InputMaskDecimalReverse';
+export { InputMaskDecimalReverse } from './InputMaskDecimalReverse';
+

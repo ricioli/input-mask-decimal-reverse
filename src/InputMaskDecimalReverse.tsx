@@ -1,7 +1,14 @@
 /**
  * http://programacao09:3333/docs/frontend/components/InputMaskReverse
  */
-import React, { DragEventHandler, FocusEventHandler, useCallback, useEffect, useRef, useState } from 'react';
+import * as React from 'react';
+import { useCallback, useEffect, useState } from 'react';
+
+interface FakeEvent {
+  target: {
+    value: string;
+  };
+}
 
 export const InputMaskDecimalReverse = ({
   prefix,
@@ -32,9 +39,9 @@ export const InputMaskDecimalReverse = ({
 
   value?: string;
 
-  onChange?: (event) => void;
-  onSelect?: (event) => void;
-  onFocus?: (event) => void;
+  onChange?: (event: FakeEvent) => void;
+  onSelect?: (event: React.SyntheticEvent<HTMLInputElement, Event>) => void;
+  onFocus?: (event: React.FocusEvent<HTMLInputElement, Element>) => void;
   autoFocus?: boolean;
 }) => {
   prefix = prefix || '';
@@ -46,7 +53,7 @@ export const InputMaskDecimalReverse = ({
   unmaskedRadix = unmaskedRadix || '.'; // caractere usado no replace do radix no unmask
   value = value || '';
 
-  const ref = useRef(null);
+  const ref = React.useRef<null | HTMLInputElement>(null);
   const [inputState, setInputState] = useState({
     maskedValue: '',
     unmaskedValue: '',
@@ -54,9 +61,12 @@ export const InputMaskDecimalReverse = ({
     selectionEnd: 0,
   });
 
-  const clearMask = useCallback((value) => value.replace(/[^\d]/g, '').replace(/^0+/, ''), []);
+  const clearMask = useCallback(
+    (value: string | undefined) => (typeof value === 'undefined' ? '' : value.replace(/[^\d]/g, '').replace(/^0+/, '')),
+    []
+  );
 
-  const getFakeEvent = (unmaskedValue, maskedValue) => {
+  const getFakeEvent = (unmaskedValue: string, maskedValue: string) => {
     const regex = new RegExp(`([0-9]+)([0-9]{${scale}})$`);
 
     return {
@@ -66,8 +76,8 @@ export const InputMaskDecimalReverse = ({
     };
   };
 
-  const handleChange = ({ target: { value } }) => {
-    const { selectionStart } = ref.current;
+  const handleChange: React.ChangeEventHandler<HTMLInputElement> = ({ target: { value } }) => {
+    const selectionStart = ref.current?.selectionStart || 0;
     const rightCursorText = value.slice(selectionStart, value.length);
 
     const { unmaskedValue, maskedValue } = getValues(value);
@@ -87,7 +97,7 @@ export const InputMaskDecimalReverse = ({
     if (onChange) onChange(fakeEvent);
   };
 
-  const format = useCallback((value) => {
+  const format = useCallback((value: string) => {
     value = clearMask(value);
     const minimumChars = scale + 1;
     value = value.padStart(minimumChars, '0');
@@ -107,12 +117,13 @@ export const InputMaskDecimalReverse = ({
   }, []);
 
   useEffect(() => {
+    if (!ref.current) return;
     // mantém a posição do cursor entre as renderizações
     ref.current.selectionStart = inputState.selectionStart;
     ref.current.selectionEnd = inputState.selectionEnd;
   }, [inputState]);
 
-  const getValues = (value) => {
+  const getValues = (value: string | undefined) => {
     const unmaskedValue = clearMask(value);
     const maskedValue = format(unmaskedValue);
 
@@ -139,15 +150,20 @@ export const InputMaskDecimalReverse = ({
     });
   }, []);
 
-  const inPrefix = (target) => target.selectionStart < prefix.length;
+  const inPrefix = (target: HTMLInputElement) => target.selectionStart && target.selectionStart < prefix.length;
   const limitCursorPosition = () => inputState.maskedValue.length - suffix.length;
-  const inSuffix = (target) => target.selectionEnd > limitCursorPosition();
+  const inSuffix = (target: HTMLInputElement) => target.selectionEnd && target.selectionEnd > limitCursorPosition();
 
-  const handleSelect = (event) => {
+  const handleSelect: React.ReactEventHandler<HTMLInputElement> = (event) => {
     const { target } = event;
+    const input = target as HTMLInputElement;
 
-    if (inPrefix(target)) {
-      const selectionEnd = { selectionEnd: target.selectionEnd < prefix.length ? prefix.length : target.selectionEnd };
+    if (inPrefix(input)) {
+      const selectionEnd = {
+        selectionEnd:
+          input.selectionEnd && input.selectionEnd < prefix.length ? prefix.length : input.selectionEnd || 0,
+      };
+
       setInputState({
         ...inputState,
         selectionStart: prefix.length,
@@ -156,9 +172,12 @@ export const InputMaskDecimalReverse = ({
     }
 
     const selectionStart = {
-      selectionStart: target.selectionStart > limitCursorPosition() ? limitCursorPosition() : target.selectionStart,
+      selectionStart:
+        input.selectionStart && input.selectionStart > limitCursorPosition()
+          ? limitCursorPosition()
+          : input.selectionStart || 0,
     };
-    if (inSuffix(target)) {
+    if (inSuffix(input)) {
       setInputState({
         ...inputState,
         ...selectionStart,
@@ -169,12 +188,12 @@ export const InputMaskDecimalReverse = ({
     if (onSelect) onSelect(event);
   };
 
-  const handleDrag: DragEventHandler<HTMLInputElement> = (event) => {
+  const handleDrag: React.DragEventHandler<HTMLInputElement> = (event) => {
     event.preventDefault();
     event.stopPropagation();
   };
 
-  const handleFocus: FocusEventHandler<HTMLInputElement> = (event) => {
+  const handleFocus: React.FocusEventHandler<HTMLInputElement> = (event) => {
     const { unmaskedValue, maskedValue } = getValues(value);
 
     setInputState({

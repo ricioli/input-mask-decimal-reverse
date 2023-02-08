@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
     "moduleResolution": "node",
-    "target": "es2017",
+    "target": "es6",
     "module": "es6",
+    "esModuleInterop": true,
     "declaration": true,
     "outDir": "./lib",
     "strict": true,
     "baseUrl": ".",
+    "jsx": "react",
     "paths": {
       "@/*": ["src/*"]
     }
