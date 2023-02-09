@@ -26,6 +26,8 @@ export const InputMaskDecimalReverse = ({
   onSelect,
   onFocus,
 
+  selectOnFocus = true,
+
   ...props
 }: {
   prefix?: string;
@@ -43,6 +45,7 @@ export const InputMaskDecimalReverse = ({
   onSelect?: (event: React.SyntheticEvent<HTMLInputElement, Event>) => void;
   onFocus?: (event: React.FocusEvent<HTMLInputElement, Element>) => void;
   autoFocus?: boolean;
+  selectOnFocus?: boolean;
 }) => {
   prefix = prefix || '';
   suffix = suffix || '';
@@ -197,13 +200,14 @@ export const InputMaskDecimalReverse = ({
 
   const handleFocus: React.FocusEventHandler<HTMLInputElement> = (event) => {
     const { unmaskedValue, maskedValue } = getValues(value);
-
-    setInputState({
-      maskedValue,
-      unmaskedValue,
-      selectionStart: prefix.length,
-      selectionEnd: maskedValue.length,
-    });
+    setTimeout(() => {
+      setInputState({
+        maskedValue,
+        unmaskedValue,
+        selectionStart: selectOnFocus ? prefix.length : maskedValue.length - suffix.length,
+        selectionEnd: maskedValue.length - suffix.length,
+      });
+    }, 2);
 
     if (onFocus) onFocus(event);
   };
