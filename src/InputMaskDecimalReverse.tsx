@@ -150,9 +150,11 @@ export const InputMaskDecimalReverse = ({
     });
   }, []);
 
-  const inPrefix = (target: HTMLInputElement) => target.selectionStart && target.selectionStart < prefix.length;
+  const inPrefix = (target: HTMLInputElement) =>
+    target.selectionStart !== null && target.selectionStart < prefix.length;
   const limitCursorPosition = () => inputState.maskedValue.length - suffix.length;
-  const inSuffix = (target: HTMLInputElement) => target.selectionEnd && target.selectionEnd > limitCursorPosition();
+  const inSuffix = (target: HTMLInputElement) =>
+    target.selectionEnd != null && target.selectionEnd > limitCursorPosition();
 
   const handleSelect: React.ReactEventHandler<HTMLInputElement> = (event) => {
     const { target } = event;
@@ -161,7 +163,7 @@ export const InputMaskDecimalReverse = ({
     if (inPrefix(input)) {
       const selectionEnd = {
         selectionEnd:
-          input.selectionEnd && input.selectionEnd < prefix.length ? prefix.length : input.selectionEnd || 0,
+          input.selectionEnd !== null && input.selectionEnd < prefix.length ? prefix.length : input.selectionEnd || 0,
       };
 
       setInputState({
@@ -173,7 +175,7 @@ export const InputMaskDecimalReverse = ({
 
     const selectionStart = {
       selectionStart:
-        input.selectionStart && input.selectionStart > limitCursorPosition()
+        input.selectionStart !== null && input.selectionStart > limitCursorPosition()
           ? limitCursorPosition()
           : input.selectionStart || 0,
     };
@@ -199,7 +201,7 @@ export const InputMaskDecimalReverse = ({
     setInputState({
       maskedValue,
       unmaskedValue,
-      selectionStart: maskedValue.length,
+      selectionStart: prefix.length,
       selectionEnd: maskedValue.length,
     });
 
