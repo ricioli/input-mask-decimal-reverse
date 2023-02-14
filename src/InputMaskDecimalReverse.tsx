@@ -10,6 +10,25 @@ interface FakeEvent {
   };
 }
 
+interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
+  prefix?: string;
+  suffix?: string;
+  unmask?: boolean;
+  scale?: number;
+  thousandsSeparator?: string;
+  radix?: string;
+  unmaskedRadix?: string;
+  startEmpty?: boolean;
+
+  value?: string;
+
+  onChange?: (event: FakeEvent) => void;
+  onSelect?: (event: React.SyntheticEvent<HTMLInputElement, Event>) => void;
+  onFocus?: (event: React.FocusEvent<HTMLInputElement, Element>) => void;
+  autoFocus?: boolean;
+  selectOnFocus?: boolean;
+}
+
 export const InputMaskDecimalReverse = ({
   prefix = '',
   suffix = '',
@@ -29,24 +48,7 @@ export const InputMaskDecimalReverse = ({
   selectOnFocus = true,
 
   ...props
-}: {
-  prefix?: string;
-  suffix?: string;
-  unmask?: boolean;
-  scale?: number;
-  thousandsSeparator?: string;
-  radix?: string;
-  unmaskedRadix?: string;
-  startEmpty?: boolean;
-
-  value?: string;
-
-  onChange?: (event: FakeEvent) => void;
-  onSelect?: (event: React.SyntheticEvent<HTMLInputElement, Event>) => void;
-  onFocus?: (event: React.FocusEvent<HTMLInputElement, Element>) => void;
-  autoFocus?: boolean;
-  selectOnFocus?: boolean;
-}) => {
+}: Props) => {
   prefix = prefix || '';
   suffix = suffix || '';
   unmask = unmask || false;
