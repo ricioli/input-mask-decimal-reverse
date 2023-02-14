@@ -10,7 +10,7 @@ interface FakeEvent {
   };
 }
 
-interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface InputMaskDecimalReverseProps extends React.InputHTMLAttributes<HTMLInputElement> {
   prefix?: string;
   suffix?: string;
   unmask?: boolean;
@@ -48,7 +48,7 @@ export const InputMaskDecimalReverse = ({
   selectOnFocus = true,
 
   ...props
-}: Props) => {
+}: InputMaskDecimalReverseProps) => {
   prefix = prefix || '';
   suffix = suffix || '';
   unmask = unmask || false;
